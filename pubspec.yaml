@@ -1,0 +1,37 @@
+name: entity_app
+description: "ENT.AI Predictor Mobile Application"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Базовые иконки Apple (часто нужны под капотом)
+  cupertino_icons: ^1.0.8
+  
+  # Крутые шрифты от Google для нашего дизайна
+  google_fonts: ^6.2.1
+  
+  animations: ^2.0.11
+
+  # Пакеты для мультиязычности (RU, KK, EN)
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  # Эта строчка обязательна, чтобы Flutter сам генерировал файлы переводов
+  generate: true
+
+  assets:
+    - assets/images/entity_logo.png
