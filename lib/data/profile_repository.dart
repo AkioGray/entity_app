@@ -6,7 +6,10 @@ class ProfileRepository {
     globalRegion.value = 'Алматы';
     globalSchoolType.value = 'city';
     globalHasQuota.value = false;
-    globalComboIndex.value = 2;
+    
+    // ИСПРАВЛЕНИЕ: Используем новые переменные вместо globalComboIndex
+    globalProf1.value = 'Математика';
+    globalProf2.value = 'Физика';
   }
 
   static Future<bool> saveUserData() async {
