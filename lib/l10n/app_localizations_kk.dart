@@ -283,4 +283,32 @@ class AppLocalizationsKk extends AppLocalizations {
   @override
   String get server_error_desc =>
       'Біздің AI алгоритмдеріміз уақытша қолжетімсіз';
+
+  @override
+  String get creative_exam => 'Шығармашылық емтихан';
+
+  @override
+  String get first_subject => 'Бірінші пән';
+
+  @override
+  String get second_subject => 'Екінші пән';
+
+  @override
+  String get career_test => 'Кәсіптік бағдар';
+
+  @override
+  String get test_offer_title => 'Өз мамандығыңды біл!';
+
+  @override
+  String get test_offer_desc =>
+      'AI сізге идеалды мамандықтарды таңдау үшін қысқа тест тапсырыңыз.';
+
+  @override
+  String get pass_now => 'Қазір өту';
+
+  @override
+  String get postpone => 'Кейінге қалдыру';
+
+  @override
+  String get career_result => 'Сіздің салаңыз: ';
 }

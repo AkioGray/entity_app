@@ -645,6 +645,60 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Наши ИИ-алгоритмы временно недоступны'**
   String get server_error_desc;
+
+  /// No description provided for @creative_exam.
+  ///
+  /// In ru, this message translates to:
+  /// **'Творческий экзамен'**
+  String get creative_exam;
+
+  /// No description provided for @first_subject.
+  ///
+  /// In ru, this message translates to:
+  /// **'Первый предмет'**
+  String get first_subject;
+
+  /// No description provided for @second_subject.
+  ///
+  /// In ru, this message translates to:
+  /// **'Второй предмет'**
+  String get second_subject;
+
+  /// No description provided for @career_test.
+  ///
+  /// In ru, this message translates to:
+  /// **'Профориентация'**
+  String get career_test;
+
+  /// No description provided for @test_offer_title.
+  ///
+  /// In ru, this message translates to:
+  /// **'Узнай свое призвание!'**
+  String get test_offer_title;
+
+  /// No description provided for @test_offer_desc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пройди короткий тест, чтобы ИИ подобрал идеальные специальности для тебя.'**
+  String get test_offer_desc;
+
+  /// No description provided for @pass_now.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пройти сейчас'**
+  String get pass_now;
+
+  /// No description provided for @postpone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отложить'**
+  String get postpone;
+
+  /// No description provided for @career_result.
+  ///
+  /// In ru, this message translates to:
+  /// **'Твоя сфера: '**
+  String get career_result;
 }
 
 class _AppLocalizationsDelegate

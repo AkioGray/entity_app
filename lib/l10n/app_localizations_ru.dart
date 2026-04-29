@@ -283,4 +283,32 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get server_error_desc => 'Наши ИИ-алгоритмы временно недоступны';
+
+  @override
+  String get creative_exam => 'Творческий экзамен';
+
+  @override
+  String get first_subject => 'Первый предмет';
+
+  @override
+  String get second_subject => 'Второй предмет';
+
+  @override
+  String get career_test => 'Профориентация';
+
+  @override
+  String get test_offer_title => 'Узнай свое призвание!';
+
+  @override
+  String get test_offer_desc =>
+      'Пройди короткий тест, чтобы ИИ подобрал идеальные специальности для тебя.';
+
+  @override
+  String get pass_now => 'Пройти сейчас';
+
+  @override
+  String get postpone => 'Отложить';
+
+  @override
+  String get career_result => 'Твоя сфера: ';
 }

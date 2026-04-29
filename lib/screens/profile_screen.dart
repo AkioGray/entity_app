@@ -7,6 +7,7 @@ import '../utils/page_transitions.dart';
 import '../widgets/animated_button.dart';
 import '../widgets/skeleton_loader.dart';
 import 'welcome_screen.dart';
+import 'career_test_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -94,16 +95,63 @@ class _ProfileScreenState extends State<ProfileScreen> {
         
         const SizedBox(height: 40),
 
+        ValueListenableBuilder<bool>(
+          valueListenable: globalIsTestPassed,
+          builder: (context, isPassed, _) {
+            if (isPassed) {
+              return ValueListenableBuilder<String>(
+                valueListenable: globalTestResult,
+                builder: (context, result, _) {
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    decoration: BoxDecoration(color: primaryCyan.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(16), border: Border.all(color: primaryCyan.withValues(alpha: 0.3))),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.psychology_rounded, color: primaryCyan, size: 20),
+                        const SizedBox(width: 8),
+                        Text("${l10n.career_result} $result", style: GoogleFonts.inter(color: primaryCyan, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  );
+                }
+              );
+            } else {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: SizedBox(
+                  width: 250,
+                  child: AnimatedEntityButton(
+                    text: l10n.career_test,
+                    colors: [primaryPurple, primaryPurple],
+                    isOutlined: true,
+                    onPressed: () => Navigator.push(context, EntityPageRoute(page: const CareerTestScreen())),
+                  ),
+                ),
+              );
+            }
+          }
+        ),
+
         Align(alignment: Alignment.centerLeft, child: Text(l10n.your_combo, style: titleStyle.copyWith(fontSize: 18))),
         const SizedBox(height: 16),
-        ValueListenableBuilder<int>(
-          valueListenable: globalComboIndex,
-          builder: (context, comboIndex, _) {
-            final currentCombo = getEntCombos(l10n)[comboIndex];
-            return _buildClickableCard(
-              icon: Icons.school_rounded, color: primaryPurple, title: l10n.profile_subjects, value: "${currentCombo.subj1} + \n${currentCombo.subj2}",
-              cardBgColor: cardBgColor, borderColor: borderColor, textPrimary: textPrimary, textSecondary: textSecondary,
-              onTap: () => showComboPicker(context, cardBgColor, textPrimary, textSecondary, primaryCyan, (idx) => globalComboIndex.value = idx),
+        
+        ValueListenableBuilder<String>(
+          valueListenable: globalProf1,
+          builder: (context, p1, _) {
+            return ValueListenableBuilder<String>(
+              valueListenable: globalProf2,
+              builder: (context, p2, _) {
+                return _buildClickableCard(
+                  icon: Icons.school_rounded, color: primaryPurple, title: l10n.profile_subjects, value: "$p1 + \n$p2",
+                  cardBgColor: cardBgColor, borderColor: borderColor, textPrimary: textPrimary, textSecondary: textSecondary,
+                  onTap: () => showSmartComboPicker(context, cardBgColor, textPrimary, textSecondary, primaryCyan, (s1, s2) {
+                    globalProf1.value = s1;
+                    globalProf2.value = s2;
+                  }),
+                );
+              }
             );
           }
         ),

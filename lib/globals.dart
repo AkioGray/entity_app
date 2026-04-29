@@ -9,6 +9,14 @@ final ValueNotifier<String?> globalRegion = ValueNotifier<String?>(null);
 final ValueNotifier<String> globalSchoolType = ValueNotifier<String>('city');
 final ValueNotifier<bool> globalHasQuota = ValueNotifier<bool>(false);
 
+// ДАННЫЕ ПРОФТЕСТА
+final ValueNotifier<bool> globalIsTestPassed = ValueNotifier<bool>(false);
+final ValueNotifier<String> globalTestResult = ValueNotifier<String>('');
+
+// УМНЫЙ СЕЛЕКТОР ПРЕДМЕТОВ
+final ValueNotifier<String> globalProf1 = ValueNotifier<String>('Математика');
+final ValueNotifier<String> globalProf2 = ValueNotifier<String>('Физика');
+
 List<String> getLocalizedRegions(String langCode) {
   if (langCode == 'kk') {
     return [
@@ -80,65 +88,81 @@ void showRegionPicker(BuildContext context, Color cardBgColor, Color textPrimary
 }
 
 final ValueNotifier<bool> globalIsDarkMode = ValueNotifier<bool>(false);
-final ValueNotifier<int> globalComboIndex = ValueNotifier<int>(2); 
 
-class EntCombo {
-  final String subj1;
-  final String subj2;
-  EntCombo(this.subj1, this.subj2);
+Map<String, List<String>> getSmartCombos(AppLocalizations l10n) {
+  return {
+    l10n.subj_math: [l10n.subj_physics, l10n.subj_geography, l10n.subj_informatics],
+    l10n.subj_biology: [l10n.subj_chemistry, l10n.subj_geography],
+    l10n.subj_foreign_lang: [l10n.subj_world_history, l10n.subj_geography],
+    l10n.subj_geography: [l10n.subj_world_history, l10n.subj_foreign_lang],
+    l10n.subj_chemistry: [l10n.subj_physics, l10n.subj_biology],
+    l10n.subj_world_history: [l10n.subj_law, l10n.subj_geography],
+    l10n.subj_language: [l10n.subj_literature],
+    l10n.creative_exam: [l10n.creative_exam],
+  };
 }
 
-List<EntCombo> getEntCombos(AppLocalizations l10n) {
-  return [
-    EntCombo(l10n.subj_math, l10n.subj_physics),
-    EntCombo(l10n.subj_math, l10n.subj_geography),
-    EntCombo(l10n.subj_math, l10n.subj_informatics), 
-    EntCombo(l10n.subj_biology, l10n.subj_chemistry),
-    EntCombo(l10n.subj_biology, l10n.subj_geography),
-    EntCombo(l10n.subj_foreign_lang, l10n.subj_world_history),
-    EntCombo(l10n.subj_geography, l10n.subj_world_history),
-    EntCombo(l10n.subj_chemistry, l10n.subj_physics),
-    EntCombo(l10n.subj_world_history, l10n.subj_law),
-    EntCombo(l10n.subj_language, l10n.subj_literature),
-  ];
-}
-
-void showComboPicker(BuildContext context, Color cardBgColor, Color textPrimary, Color textSecondary, Color primaryCyan, Function(int) onSelect) {
+void showSmartComboPicker(BuildContext context, Color cardBgColor, Color textPrimary, Color textSecondary, Color primaryCyan, Function(String, String) onSelect) {
   final l10n = AppLocalizations.of(context)!;
-  final combos = getEntCombos(l10n);
+  final combos = getSmartCombos(l10n);
   
+  String? tempSubj1;
+
   showModalBottomSheet(
     context: context,
     backgroundColor: Colors.transparent,
+    isScrollControlled: true,
     builder: (context) {
-      return Container(
-        decoration: BoxDecoration(color: cardBgColor, borderRadius: const BorderRadius.vertical(top: Radius.circular(24))),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 12),
-            Container(width: 40, height: 4, decoration: BoxDecoration(color: textSecondary.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(2))),
-            const SizedBox(height: 16),
-            Text(l10n.select_combo, style: GoogleFonts.spaceGrotesk(color: textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 16),
-            Expanded(
-              child: ListView.builder(
-                itemCount: combos.length,
-                itemBuilder: (context, index) {
-                  final combo = combos[index];
-                  return ListTile(
-                    leading: Icon(Icons.school_outlined, color: primaryCyan),
-                    title: Text("${combo.subj1} + ${combo.subj2}", style: GoogleFonts.inter(color: textPrimary)),
-                    onTap: () {
-                      onSelect(index);
-                      Navigator.pop(context);
+      return StatefulBuilder(
+        builder: (context, setModalState) {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.7,
+            decoration: BoxDecoration(color: cardBgColor, borderRadius: const BorderRadius.vertical(top: Radius.circular(24))),
+            child: Column(
+              children: [
+                const SizedBox(height: 12),
+                Container(width: 40, height: 4, decoration: BoxDecoration(color: textSecondary.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(2))),
+                const SizedBox(height: 16),
+                Text(tempSubj1 == null ? l10n.first_subject : l10n.second_subject, style: GoogleFonts.spaceGrotesk(color: textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: tempSubj1 == null ? combos.keys.length : combos[tempSubj1]!.length,
+                    itemBuilder: (context, index) {
+                      final item = tempSubj1 == null ? combos.keys.elementAt(index) : combos[tempSubj1]![index];
+                      return ListTile(
+                        leading: Icon(tempSubj1 == null ? Icons.looks_one_rounded : Icons.looks_two_rounded, color: primaryCyan),
+                        title: Text(item, style: GoogleFonts.inter(color: textPrimary)),
+                        onTap: () {
+                          setModalState(() {
+                            if (tempSubj1 == null) {
+                              tempSubj1 = item;
+                              if (tempSubj1 == l10n.creative_exam) {
+                                onSelect(tempSubj1!, tempSubj1!);
+                                Navigator.pop(context);
+                              }
+                            } else {
+                              onSelect(tempSubj1!, item);
+                              Navigator.pop(context);
+                            }
+                          });
+                        },
+                      );
                     },
-                  );
-                },
-              ),
+                  ),
+                ),
+                if (tempSubj1 != null)
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: TextButton(
+                      onPressed: () => setModalState(() => tempSubj1 = null),
+                      child: Text("Назад", style: TextStyle(color: textSecondary)),
+                    ),
+                  )
+              ],
             ),
-          ],
-        ),
+          );
+        }
       );
     }
   );

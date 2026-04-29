@@ -89,5 +89,14 @@
   "check_connection": "Check your network connection",
   "try_again": "Try again",
   "server_error": "Server error",
-  "server_error_desc": "Our AI algorithms are temporarily unavailable"
+  "server_error_desc": "Our AI algorithms are temporarily unavailable",
+  "creative_exam": "Creative Exam",
+  "first_subject": "First subject",
+  "second_subject": "Second subject",
+  "career_test": "Career Test",
+  "test_offer_title": "Find your calling!",
+  "test_offer_desc": "Take a short test so AI can select the ideal specialties for you.",
+  "pass_now": "Take now",
+  "postpone": "Postpone",
+  "career_result": "Your field: "
 }

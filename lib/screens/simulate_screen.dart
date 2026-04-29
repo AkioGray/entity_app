@@ -150,33 +150,41 @@ class _SimulateScreenState extends State<SimulateScreen> {
               const SizedBox(height: 32),
               Text(l10n.parameter_adjust, style: titleStyle.copyWith(fontSize: 18)),
               const SizedBox(height: 16),
-              ValueListenableBuilder<int>(
-                valueListenable: globalComboIndex,
-                builder: (context, comboIndex, _) {
-                  final currentCombo = getEntCombos(l10n)[comboIndex];
-                  return Column(
-                    children: [
-                      _buildSlider(currentCombo.subj1, _prof1, 50, primaryCyan, cardBgColor, textPrimary, textSecondary, (val) {
-                        setState(() => _prof1 = val);
-                        _onSliderChanged();
-                      }),
-                      _buildSlider(currentCombo.subj2, _prof2, 50, primaryCyan, cardBgColor, textPrimary, textSecondary, (val) {
-                        setState(() => _prof2 = val);
-                        _onSliderChanged();
-                      }),
-                      _buildSlider(l10n.subj_history, _history, 20, primaryCyan, cardBgColor, textPrimary, textSecondary, (val) {
-                        setState(() => _history = val);
-                        _onSliderChanged();
-                      }),
-                      _buildSlider(l10n.subj_reading, _reading, 10, primaryCyan, cardBgColor, textPrimary, textSecondary, (val) {
-                        setState(() => _reading = val);
-                        _onSliderChanged();
-                      }),
-                      _buildSlider(l10n.subj_math_lit, _math, 10, primaryCyan, cardBgColor, textPrimary, textSecondary, (val) {
-                        setState(() => _math = val);
-                        _onSliderChanged();
-                      }),
-                    ],
+              
+              ValueListenableBuilder<String>(
+                valueListenable: globalProf1,
+                builder: (context, p1, _) {
+                  return ValueListenableBuilder<String>(
+                    valueListenable: globalProf2,
+                    builder: (context, p2, _) {
+                      return Column(
+                        children: [
+                          _buildSlider(p1, _prof1, 50, primaryCyan, cardBgColor, textPrimary, textSecondary, (val) {
+                            setState(() => _prof1 = val);
+                            _onSliderChanged();
+                          }),
+                          if (p1 != l10n.creative_exam)
+                            _buildSlider(p2, _prof2, 50, primaryCyan, cardBgColor, textPrimary, textSecondary, (val) {
+                              setState(() => _prof2 = val);
+                              _onSliderChanged();
+                            }),
+                          if (p1 != l10n.creative_exam) ...[
+                            _buildSlider(l10n.subj_history, _history, 20, primaryCyan, cardBgColor, textPrimary, textSecondary, (val) {
+                              setState(() => _history = val);
+                              _onSliderChanged();
+                            }),
+                            _buildSlider(l10n.subj_reading, _reading, 10, primaryCyan, cardBgColor, textPrimary, textSecondary, (val) {
+                              setState(() => _reading = val);
+                              _onSliderChanged();
+                            }),
+                            _buildSlider(l10n.subj_math_lit, _math, 10, primaryCyan, cardBgColor, textPrimary, textSecondary, (val) {
+                              setState(() => _math = val);
+                              _onSliderChanged();
+                            }),
+                          ]
+                        ],
+                      );
+                    }
                   );
                 }
               ),

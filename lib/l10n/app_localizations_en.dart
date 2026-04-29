@@ -284,4 +284,32 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get server_error_desc =>
       'Our AI algorithms are temporarily unavailable';
+
+  @override
+  String get creative_exam => 'Creative Exam';
+
+  @override
+  String get first_subject => 'First subject';
+
+  @override
+  String get second_subject => 'Second subject';
+
+  @override
+  String get career_test => 'Career Test';
+
+  @override
+  String get test_offer_title => 'Find your calling!';
+
+  @override
+  String get test_offer_desc =>
+      'Take a short test so AI can select the ideal specialties for you.';
+
+  @override
+  String get pass_now => 'Take now';
+
+  @override
+  String get postpone => 'Postpone';
+
+  @override
+  String get career_result => 'Your field: ';
 }
