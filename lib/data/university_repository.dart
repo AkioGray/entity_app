@@ -18,12 +18,17 @@ class UniversityRepository {
     return _mockDatabase.map((e) => e.city).toSet().toList();
   }
 
-  static Future<List<University>> getUniversities({required int page, String? cityFilter}) async {
-    await Future.delayed(const Duration(milliseconds: 1200));
+  static Future<List<University>> getUniversities({required int page, String? cityFilter, String? searchQuery}) async {
+    await Future.delayed(const Duration(milliseconds: 800));
     
     List<University> filtered = _mockDatabase;
+    
     if (cityFilter != null && cityFilter.isNotEmpty) {
       filtered = filtered.where((u) => u.city == cityFilter).toList();
+    }
+    
+    if (searchQuery != null && searchQuery.trim().isNotEmpty) {
+      filtered = filtered.where((u) => u.name.toLowerCase().contains(searchQuery.toLowerCase().trim())).toList();
     }
 
     final int pageSize = 10;

@@ -10,6 +10,10 @@ class SimulationRepository {
   }) async {
     await Future.delayed(const Duration(milliseconds: 600));
 
+    if (prof1 < 5 || prof2 < 5 || history < 5 || reading < 3 || math < 3) {
+      return 0.0;
+    }
+
     int total = prof1 + prof2 + history + reading + math;
     double chance = total / 140.0;
 

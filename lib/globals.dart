@@ -2,20 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'l10n/app_localizations.dart';
 
+final ValueNotifier<String> globalUserName = ValueNotifier<String>('Adil');
+final ValueNotifier<String> globalUserEmail = ValueNotifier<String>('adilaiserik@gmail.com');
+
 final ValueNotifier<String?> globalRegion = ValueNotifier<String?>(null);
 final ValueNotifier<String> globalSchoolType = ValueNotifier<String>('city');
 final ValueNotifier<bool> globalHasQuota = ValueNotifier<bool>(false);
 
-final List<String> kazakhstanRegions = [
-  'Астана', 'Алматы', 'Шымкент', 'Абайская обл.', 'Акмолинская обл.',
-  'Актюбинская обл.', 'Алматинская обл.', 'Атырауская обл.',
-  'Западно-Казахстанская обл.', 'Жамбылская обл.', 'Жетысуская обл.',
-  'Карагандинская обл.', 'Костанайская обл.', 'Кызылординская обл.',
-  'Мангистауская обл.', 'Павлодарская обл.', 'Северо-Казахстанская обл.',
-  'Туркестанская обл.', 'Улытауская обл.', 'Восточно-Казахстанская обл.'
-];
+List<String> getLocalizedRegions(String langCode) {
+  if (langCode == 'kk') {
+    return [
+      'Астана қ.', 'Алматы қ.', 'Шымкент қ.', 'Абай обл.', 'Ақмола обл.',
+      'Ақтөбе обл.', 'Алматы обл.', 'Атырау обл.', 'Батыс Қазақстан обл.',
+      'Жамбыл обл.', 'Жетісу обл.', 'Қарағанды обл.', 'Қостанай обл.',
+      'Қызылорда обл.', 'Маңғыстау обл.', 'Павлодар обл.', 'Солтүстік Қазақстан обл.',
+      'Түркістан обл.', 'Ұлытау обл.', 'Шығыс Қазақстан обл.'
+    ];
+  } else if (langCode == 'en') {
+    return [
+      'Astana', 'Almaty', 'Shymkent', 'Abai Region', 'Akmola Region',
+      'Aktobe Region', 'Almaty Region', 'Atyrau Region', 'West Kazakhstan Region',
+      'Zhambyl Region', 'Zhetysu Region', 'Karaganda Region', 'Kostanay Region',
+      'Kyzylorda Region', 'Mangystau Region', 'Pavlodar Region', 'North Kazakhstan Region',
+      'Turkistan Region', 'Ulytau Region', 'East Kazakhstan Region'
+    ];
+  }
+  return [
+    'Астана', 'Алматы', 'Шымкент', 'Абайская обл.', 'Акмолинская обл.',
+    'Актюбинская обл.', 'Алматинская обл.', 'Атырауская обл.',
+    'Западно-Казахстанская обл.', 'Жамбылская обл.', 'Жетысуская обл.',
+    'Карагандинская обл.', 'Костанайская обл.', 'Кызылординская обл.',
+    'Мангистауская обл.', 'Павлодарская обл.', 'Северо-Казахстанская обл.',
+    'Туркестанская обл.', 'Улытауская обл.', 'Восточно-Казахстанская обл.'
+  ];
+}
 
 void showRegionPicker(BuildContext context, Color cardBgColor, Color textPrimary, Color textSecondary, Color primaryCyan, Function(String) onSelect) {
+  final langCode = Localizations.localeOf(context).languageCode;
+  final regions = getLocalizedRegions(langCode);
+
   showModalBottomSheet(
     context: context,
     backgroundColor: Colors.transparent,
@@ -29,13 +54,13 @@ void showRegionPicker(BuildContext context, Color cardBgColor, Color textPrimary
             const SizedBox(height: 12),
             Container(width: 40, height: 4, decoration: BoxDecoration(color: textSecondary.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(2))),
             const SizedBox(height: 16),
-            Text('Выберите регион', style: GoogleFonts.spaceGrotesk(color: textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(langCode == 'kk' ? 'Аймақты таңдаңыз' : (langCode == 'en' ? 'Select Region' : 'Выберите регион'), style: GoogleFonts.spaceGrotesk(color: textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             Expanded(
               child: ListView.builder(
-                itemCount: kazakhstanRegions.length,
+                itemCount: regions.length,
                 itemBuilder: (context, index) {
-                  final region = kazakhstanRegions[index];
+                  final region = regions[index];
                   return ListTile(
                     leading: Icon(Icons.location_on_outlined, color: primaryCyan),
                     title: Text(region, style: GoogleFonts.inter(color: textPrimary)),

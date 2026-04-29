@@ -7,6 +7,7 @@ import '../data/university_repository.dart';
 import '../widgets/skeleton_loader.dart';
 import '../widgets/animated_button.dart';
 import '../widgets/empty_state.dart';
+import '../utils/debouncer.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -17,6 +18,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   final ScrollController _scrollController = ScrollController();
+  final Debouncer _searchDebouncer = Debouncer(milliseconds: 500);
   final List<University> _universities = [];
   
   bool _isLoading = true;
@@ -25,6 +27,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   bool _hasMore = true;
   
   String? _selectedCity;
+  String _searchQuery = '';
   List<String> _availableCities = [];
 
   @override
@@ -49,7 +52,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     });
 
     final cities = await UniversityRepository.getFilterCities();
-    final newUniversities = await UniversityRepository.getUniversities(page: _currentPage, cityFilter: _selectedCity);
+    final newUniversities = await UniversityRepository.getUniversities(page: _currentPage, cityFilter: _selectedCity, searchQuery: _searchQuery);
 
     if (mounted) {
       setState(() {
@@ -67,7 +70,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     setState(() => _isLoadingMore = true);
     _currentPage++;
 
-    final newUniversities = await UniversityRepository.getUniversities(page: _currentPage, cityFilter: _selectedCity);
+    final newUniversities = await UniversityRepository.getUniversities(page: _currentPage, cityFilter: _selectedCity, searchQuery: _searchQuery);
 
     if (mounted) {
       setState(() {
@@ -205,6 +208,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             child: TextField(
                               style: TextStyle(color: textPrimary),
                               decoration: InputDecoration(hintText: l10n.search_hint, hintStyle: TextStyle(color: textSecondary), border: InputBorder.none),
+                              onChanged: (value) {
+                                _searchDebouncer.run(() {
+                                  setState(() => _searchQuery = value);
+                                  _loadInitialData();
+                                });
+                              },
                             ),
                           ),
                         ],
@@ -236,7 +245,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   )
                 : _universities.isEmpty
-                  // ИНТЕГРАЦИЯ НОВОГО EMPTY STATE ВИДЖЕТА
                   ? EmptyStateWidget(
                       icon: Icons.travel_explore_rounded,
                       title: l10n.not_found,
@@ -244,7 +252,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       isDark: isDark,
                       buttonText: l10n.reset_filters,
                       onButtonPressed: () {
-                        setState(() => _selectedCity = null);
+                        setState(() {
+                          _selectedCity = null;
+                          _searchQuery = '';
+                        });
                         _loadInitialData();
                       },
                     )

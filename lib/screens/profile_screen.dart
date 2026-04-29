@@ -82,8 +82,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
         const SizedBox(height: 10),
         CircleAvatar(radius: 50, backgroundColor: primaryCyan.withValues(alpha: 0.1), child: Icon(Icons.person_rounded, size: 50, color: primaryCyan)),
         const SizedBox(height: 16),
-        Text('Knox', style: titleStyle.copyWith(fontSize: 24)),
-        Text('student@entity.kz', style: GoogleFonts.inter(color: textSecondary, fontSize: 14)),
+        
+        ValueListenableBuilder<String>(
+          valueListenable: globalUserName,
+          builder: (context, name, _) => Text(name, style: titleStyle.copyWith(fontSize: 24))
+        ),
+        ValueListenableBuilder<String>(
+          valueListenable: globalUserEmail,
+          builder: (context, email, _) => Text(email, style: GoogleFonts.inter(color: textSecondary, fontSize: 14))
+        ),
+        
         const SizedBox(height: 40),
 
         Align(alignment: Alignment.centerLeft, child: Text(l10n.your_combo, style: titleStyle.copyWith(fontSize: 18))),
