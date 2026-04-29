@@ -59,7 +59,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 children: [
                   const Spacer(),
                   
-                  // --- HERO АНИМАЦИЯ ЛОГОТИПА ---
                   Center(
                     child: Stack(
                       alignment: Alignment.center,
@@ -72,7 +71,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           ]),
                         ),
                         Hero(
-                          tag: 'entity_brand_logo', // ОБЩИЙ ТЕГ
+                          tag: 'entity_brand_logo', 
                           child: Image.asset('assets/images/entity_logo.png', width: 110, height: 110, fit: BoxFit.contain),
                         ),
                       ],
@@ -85,18 +84,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   Text(l10n.helper_text, textAlign: TextAlign.center, style: bodyStyle.copyWith(color: textSecondary, fontSize: 16, height: 1.6)),
                   const Spacer(flex: 2),
 
-                  // --- АНИМИРОВАННЫЕ КНОПКИ ---
                   AnimatedEntityButton(
                     text: l10n.login,
                     colors: [primaryPurple, primaryCyan],
-                    onPressed: () => Navigator.pushReplacement(context, EntityPageRoute(page: const LoginScreen())),
+                    onPressed: () => Navigator.push(context, EntityPageRoute(page: const LoginScreen())),
                   ),
                   const SizedBox(height: 16),
                   AnimatedEntityButton(
                     text: l10n.register,
                     colors: [primaryCyan, primaryCyan],
-                    isOutlined: true, // Прозрачная с обводкой
-                    onPressed: () => Navigator.pushReplacement(context, EntityPageRoute(page: const RegisterScreen())),
+                    isOutlined: true,
+                    onPressed: () => Navigator.push(context, EntityPageRoute(page: const RegisterScreen())),
                   ),
                   const SizedBox(height: 40),
                 ],

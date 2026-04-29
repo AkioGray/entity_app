@@ -7,7 +7,6 @@ import '../utils/page_transitions.dart';
 import '../widgets/animated_button.dart';
 import 'main_screen.dart';
 import 'register_screen.dart';
-import 'welcome_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -47,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
               elevation: 0,
               leading: IconButton(
                 icon: Icon(Icons.arrow_back_rounded, color: textPrimary),
-                onPressed: () => Navigator.pushReplacement(context, EntityPageRoute(page: const WelcomeScreen())),
+                onPressed: () => Navigator.pop(context),
               ),
               actions: [
                 TextButton(
@@ -79,13 +78,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         Text(l10n.helper_text, textAlign: TextAlign.center, style: GoogleFonts.inter(color: textSecondary, fontSize: 14)),
                         const SizedBox(height: 48),
 
-                        // --- ПОЛЯ С ИСПРАВЛЕННЫМ СЛИПАНИЕМ ---
                         _buildTextField(
                           controller: _emailController, label: l10n.email, icon: Icons.email_outlined, 
                           inputBgColor: inputBgColor, primaryCyan: primaryCyan, isDark: isDark, 
                           validator: (v) {
                             if (v == null || v.isEmpty) return l10n.err_empty;
-                            // СТРОГАЯ ВАЛИДАЦИЯ ПОЧТЫ ВОЗВРАЩЕНА
                             if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(v)) return l10n.err_email_invalid;
                             return null;
                           }
@@ -125,15 +122,14 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // --- ИСПРАВЛЕННЫЙ БИЛДЕР: Не обрезает углы и делает отступ внутри ---
   Widget _buildTextField({required TextEditingController controller, required String label, required IconData icon, bool isPassword = false, bool isVisible = false, VoidCallback? onVisibilityToggle, required Color inputBgColor, required Color primaryCyan, required bool isDark, required String? Function(String?) validator}) {
     return AnimatedSize(
       duration: const Duration(milliseconds: 300),
       curve: Curves.fastOutSlowIn,
       alignment: Alignment.topCenter,
-      clipBehavior: Clip.none, // ВАЖНО: Больше не обрезает границы поля!
+      clipBehavior: Clip.none,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 16.0), // Отступ 16px живет прямо здесь
+        margin: const EdgeInsets.only(bottom: 16.0),
         child: TextFormField(
           controller: controller, obscureText: isPassword && !isVisible, style: GoogleFonts.inter(color: isDark ? Colors.white : const Color(0xFF0F172A)),
           decoration: InputDecoration(

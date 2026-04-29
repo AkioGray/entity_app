@@ -146,17 +146,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         _isSaving 
           ? const CircularProgressIndicator()
-          : AnimatedEntityButton(
-              text: l10n.save_changes,
-              colors: [primaryCyan, primaryPurple],
-              onPressed: _saveData,
+          : SizedBox(
+              width: 250,
+              child: AnimatedEntityButton(
+                text: l10n.save_changes,
+                colors: [primaryCyan, primaryPurple],
+                onPressed: _saveData,
+              ),
             ),
         const SizedBox(height: 16),
 
-        AnimatedEntityButton(
-          text: l10n.logout,
-          colors: const [Color(0xFFEF4444), Color(0xFFDC2626)],
-          onPressed: () => Navigator.pushAndRemoveUntil(context, EntityPageRoute(page: const WelcomeScreen()), (r) => false),
+        SizedBox(
+          width: 250,
+          child: AnimatedEntityButton(
+            text: l10n.logout,
+            colors: [textSecondary, textSecondary],
+            isOutlined: true,
+            onPressed: () => Navigator.pushAndRemoveUntil(context, EntityPageRoute(page: const WelcomeScreen()), (r) => false),
+          ),
         ),
       ],
     );
@@ -222,8 +229,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 12),
             Row(
               children: [
-                Expanded(child: Container(alignment: Alignment.center, padding: const EdgeInsets.symmetric(vertical: 8), decoration: BoxDecoration(color: isVal1 ? activeColor.withValues(alpha: 0.15) : Colors.transparent, borderRadius: BorderRadius.circular(8)), child: Text(val1, style: GoogleFonts.inter(color: isVal1 ? activeColor : textSecondary, fontWeight: isVal1 ? FontWeight.bold : FontWeight.normal, fontSize: 13)))),
-                Expanded(child: Container(alignment: Alignment.center, padding: const EdgeInsets.symmetric(vertical: 8), decoration: BoxDecoration(color: !isVal1 ? activeColor.withValues(alpha: 0.15) : Colors.transparent, borderRadius: BorderRadius.circular(8)), child: Text(val2, style: GoogleFonts.inter(color: !isVal1 ? activeColor : textSecondary, fontWeight: !isVal1 ? FontWeight.bold : FontWeight.normal, fontSize: 13)))),
+                Expanded(child: Container(alignment: Alignment.center, padding: const EdgeInsets.symmetric(vertical: 8), decoration: BoxDecoration(color: isVal1 ? activeColor.withValues(alpha: 0.15) : Colors.transparent, borderRadius: BorderRadius.circular(8)), child: FittedBox(fit: BoxFit.scaleDown, child: Text(val1, style: GoogleFonts.inter(color: isVal1 ? activeColor : textSecondary, fontWeight: isVal1 ? FontWeight.bold : FontWeight.normal, fontSize: 13))))),
+                Expanded(child: Container(alignment: Alignment.center, padding: const EdgeInsets.symmetric(vertical: 8), decoration: BoxDecoration(color: !isVal1 ? activeColor.withValues(alpha: 0.15) : Colors.transparent, borderRadius: BorderRadius.circular(8)), child: FittedBox(fit: BoxFit.scaleDown, child: Text(val2, style: GoogleFonts.inter(color: !isVal1 ? activeColor : textSecondary, fontWeight: !isVal1 ? FontWeight.bold : FontWeight.normal, fontSize: 13))))),
               ],
             )
           ],
