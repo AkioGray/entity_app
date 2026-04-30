@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../l10n/app_localizations.dart';
 import '../globals.dart';
+import '../core/auth_storage.dart';
 import '../data/profile_repository.dart';
 import '../utils/page_transitions.dart';
 import '../widgets/animated_button.dart';
@@ -218,7 +219,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             text: l10n.logout,
             colors: [textSecondary, textSecondary],
             isOutlined: true,
-            onPressed: () => Navigator.pushAndRemoveUntil(context, EntityPageRoute(page: const WelcomeScreen()), (r) => false),
+            onPressed: () async {
+              await AuthStorage.deleteToken();
+              if (!context.mounted) return;
+              Navigator.pushAndRemoveUntil(context, EntityPageRoute(page: const WelcomeScreen()), (r) => false);
+            },
           ),
         ),
       ],

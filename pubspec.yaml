@@ -9,16 +9,18 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  
-  # Базовые иконки Apple (часто нужны под капотом)
+
   cupertino_icons: ^1.0.8
-  
-  # Крутые шрифты от Google для нашего дизайна
   google_fonts: ^6.2.1
-  
   animations: ^2.0.11
 
-  # Пакеты для мультиязычности (RU, KK, EN)
+  # HTTP-клиент
+  dio: ^5.4.0
+
+  # Безопасное хранение JWT-токена
+  flutter_secure_storage: ^9.0.0
+
+  # Мультиязычность
   flutter_localizations:
     sdk: flutter
   intl: any

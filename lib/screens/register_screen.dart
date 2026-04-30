@@ -5,6 +5,7 @@ import '../main.dart';
 import '../globals.dart';
 import '../utils/page_transitions.dart';
 import '../widgets/animated_button.dart';
+import '../data/auth_repository.dart';
 import 'main_screen.dart';
 import 'login_screen.dart';
 import 'career_test_screen.dart';
@@ -18,15 +19,17 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _userController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmController = TextEditingController();
-  
+
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
-  
-  // НОВЫЕ ПЕРЕМЕННЫЕ ВМЕСТО СТАРОГО ИНДЕКСА
+  bool _isLoading = false;
+  String? _errorMessage;
+
   String _localProf1 = 'Математика';
   String _localProf2 = 'Физика';
 
@@ -104,7 +107,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Text(l10n.register, textAlign: TextAlign.center, style: titleStyle.copyWith(fontSize: 32)),
                       const SizedBox(height: 32),
                       
-                      _buildTextField(controller: _userController, label: l10n.username, icon: Icons.person_outline_rounded, inputBgColor: inputBgColor, primaryCyan: primaryCyan, isDark: isDark, validator: (v) { if (v == null || v.isEmpty) return l10n.err_empty; if (v.length < 3) return l10n.err_username_short; if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(v)) return l10n.err_username_invalid; return null; }),
+                      _buildTextField(controller: _firstNameController, label: 'Имя', icon: Icons.person_outline_rounded, inputBgColor: inputBgColor, primaryCyan: primaryCyan, isDark: isDark, validator: (v) { if (v == null || v.isEmpty) return l10n.err_empty; if (v.length < 2) return 'Минимум 2 символа'; return null; }),
+                      _buildTextField(controller: _lastNameController, label: 'Фамилия', icon: Icons.person_outline_rounded, inputBgColor: inputBgColor, primaryCyan: primaryCyan, isDark: isDark, validator: (v) { if (v == null || v.isEmpty) return l10n.err_empty; if (v.length < 2) return 'Минимум 2 символа'; return null; }),
                       _buildTextField(controller: _emailController, label: l10n.email, icon: Icons.email_outlined, inputBgColor: inputBgColor, primaryCyan: primaryCyan, isDark: isDark, validator: (v) { if (v == null || v.isEmpty) return l10n.err_empty; if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(v)) return l10n.err_email_invalid; return null; }),
                       _buildTextField(controller: _passwordController, label: l10n.password, icon: Icons.lock_outline_rounded, isPassword: true, isVisible: _isPasswordVisible, onVisibilityToggle: () => setState(() => _isPasswordVisible = !_isPasswordVisible), inputBgColor: inputBgColor, primaryCyan: primaryCyan, isDark: isDark, validator: (v) { if (v == null || v.isEmpty) return l10n.err_empty; if (v.length < 8) return l10n.err_pass_short; if (!RegExp(r'(?=.*[A-Z])').hasMatch(v)) return l10n.err_pass_upper; if (!RegExp(r'(?=.*[a-z])').hasMatch(v)) return l10n.err_pass_lower; if (!RegExp(r'(?=.*\d)').hasMatch(v)) return l10n.err_pass_digit; return null; }),
                       _buildTextField(controller: _confirmController, label: l10n.confirm_password, icon: Icons.lock_reset_rounded, isPassword: true, isVisible: _isConfirmPasswordVisible, onVisibilityToggle: () => setState(() => _isConfirmPasswordVisible = !_isConfirmPasswordVisible), inputBgColor: inputBgColor, primaryCyan: primaryCyan, isDark: isDark, validator: (v) { if (v == null || v.isEmpty) return l10n.err_empty; if (v != _passwordController.text) return l10n.err_pass_match; return null; }),
@@ -129,14 +133,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       const SizedBox(height: 40),
                       
-                      AnimatedEntityButton(text: l10n.register, colors: [primaryCyan, primaryPurple], onPressed: () { 
-                        if (_formKey.currentState!.validate()) { 
-                          // СОХРАНЯЕМ В НОВЫЕ ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
-                          globalProf1.value = _localProf1;
-                          globalProf2.value = _localProf2;
-                          _showTestAlert(context, l10n, inputBgColor, primaryCyan, textPrimary, textSecondary);
-                        } 
-                      }),
+                      if (_errorMessage != null)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: Text(_errorMessage!, style: GoogleFonts.inter(color: const Color(0xFFEF4444), fontSize: 13), textAlign: TextAlign.center),
+                        ),
+
+                      AnimatedEntityButton(
+                        text: _isLoading ? '...' : l10n.register,
+                        colors: [primaryCyan, primaryPurple],
+                        onPressed: _isLoading ? null : () async {
+                          if (!_formKey.currentState!.validate()) return;
+                          setState(() { _isLoading = true; _errorMessage = null; });
+                          try {
+                            await AuthRepository.register(
+                              firstName: _firstNameController.text.trim(),
+                              lastName: _lastNameController.text.trim(),
+                              email: _emailController.text.trim(),
+                              password: _passwordController.text,
+                              profileSubject1: _localProf1,
+                              profileSubject2: _localProf2,
+                            );
+                            if (!mounted) return;
+                            _showTestAlert(context, l10n, inputBgColor, primaryCyan, textPrimary, textSecondary);
+                          } catch (e) {
+                            setState(() { _errorMessage = AuthRepository.friendlyError(e); });
+                          } finally {
+                            if (mounted) setState(() { _isLoading = false; });
+                          }
+                        },
+                      ),
                       
                       const SizedBox(height: 24),
                       TextButton(onPressed: () => Navigator.pushReplacement(context, EntityPageRoute(page: const LoginScreen())), child: Text(l10n.have_account, style: TextStyle(color: primaryPurple, fontWeight: FontWeight.bold))),

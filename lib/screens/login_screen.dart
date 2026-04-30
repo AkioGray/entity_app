@@ -5,6 +5,7 @@ import '../main.dart';
 import '../globals.dart';
 import '../utils/page_transitions.dart';
 import '../widgets/animated_button.dart';
+import '../data/auth_repository.dart';
 import 'main_screen.dart';
 import 'register_screen.dart';
 
@@ -20,6 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
+  bool _isLoading = false;
+  String? _errorMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -95,12 +98,29 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 16),
 
+                        if (_errorMessage != null)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: Text(_errorMessage!, style: GoogleFonts.inter(color: const Color(0xFFEF4444), fontSize: 13), textAlign: TextAlign.center),
+                          ),
+
                         AnimatedEntityButton(
-                          text: l10n.login,
+                          text: _isLoading ? '...' : l10n.login,
                           colors: [primaryPurple, primaryCyan],
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
+                          onPressed: _isLoading ? null : () async {
+                            if (!_formKey.currentState!.validate()) return;
+                            setState(() { _isLoading = true; _errorMessage = null; });
+                            try {
+                              await AuthRepository.login(
+                                _emailController.text.trim(),
+                                _passwordController.text,
+                              );
+                              if (!mounted) return;
                               Navigator.pushAndRemoveUntil(context, EntityPageRoute(page: const MainScreen()), (r) => false);
+                            } catch (e) {
+                              setState(() { _errorMessage = AuthRepository.friendlyError(e); });
+                            } finally {
+                              if (mounted) setState(() { _isLoading = false; });
                             }
                           },
                         ),
