@@ -5,6 +5,8 @@ import 'screens/welcome_screen.dart';
 import 'screens/main_screen.dart';
 import 'core/auth_storage.dart';
 
+final navigatorKey = GlobalKey<NavigatorState>();
+
 void main() {
   runApp(const EntityApp());
 }
@@ -25,9 +27,7 @@ class _EntityAppState extends State<EntityApp> {
   Locale? _locale;
 
   void setLocale(Locale locale) {
-    setState(() {
-      _locale = locale;
-    });
+    setState(() => _locale = locale);
   }
 
   @override
@@ -35,12 +35,9 @@ class _EntityAppState extends State<EntityApp> {
     return MaterialApp(
       title: 'Entity',
       debugShowCheckedModeBanner: false,
+      navigatorKey: navigatorKey,
       locale: _locale,
-      supportedLocales: const [
-        Locale('ru'),
-        Locale('kk'),
-        Locale('en'),
-      ],
+      supportedLocales: const [Locale('ru'), Locale('kk'), Locale('en')],
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -79,8 +76,6 @@ class _SplashRouterState extends State<_SplashRouter> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: CircularProgressIndicator()),
-    );
+    return const Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 }

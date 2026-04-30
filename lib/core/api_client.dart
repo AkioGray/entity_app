@@ -1,4 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import '../main.dart';
+import '../screens/welcome_screen.dart';
 import 'auth_storage.dart';
 
 class ApiClient {
@@ -29,8 +32,14 @@ class _AuthInterceptor extends Interceptor {
   }
 
   @override
-  void onError(DioException err, ErrorInterceptorHandler handler) {
-    // 401 обрабатывается в каждом репозитории — просто пропускаем дальше
+  Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
+    if (err.response?.statusCode == 401) {
+      await AuthStorage.deleteToken();
+      navigatorKey.currentState?.pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+        (route) => false,
+      );
+    }
     handler.next(err);
   }
 }

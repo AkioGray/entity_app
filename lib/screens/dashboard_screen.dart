@@ -258,7 +258,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             
             Expanded(
-              child: _isLoading 
+              child: _isLoading
                 ? ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     itemCount: 5,
@@ -268,21 +268,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   )
                 : _universities.isEmpty
-                  ? EmptyStateWidget(
-                      icon: Icons.travel_explore_rounded,
-                      title: l10n.not_found,
-                      subtitle: "Попробуйте изменить параметры поиска или сбросить фильтры",
-                      isDark: isDark,
-                      buttonText: l10n.reset_filters,
-                      onButtonPressed: () {
-                        setState(() {
-                          _selectedCity = null;
-                          _searchQuery = '';
-                        });
-                        _loadInitialData();
-                      },
+                  ? RefreshIndicator(
+                      color: primaryCyan,
+                      onRefresh: _loadInitialData,
+                      child: ListView(
+                        children: [EmptyStateWidget(
+                          icon: Icons.travel_explore_rounded,
+                          title: l10n.not_found,
+                          subtitle: "Попробуйте изменить параметры поиска или сбросить фильтры",
+                          isDark: isDark,
+                          buttonText: l10n.reset_filters,
+                          onButtonPressed: () {
+                            setState(() { _selectedCity = null; _searchQuery = ''; });
+                            _loadInitialData();
+                          },
+                        )],
+                      ),
                     )
-                  : ListView.builder(
+                  : RefreshIndicator(
+                      color: primaryCyan,
+                      onRefresh: _loadInitialData,
+                      child: ListView.builder(
                       controller: _scrollController,
                       physics: const BouncingScrollPhysics(),
                       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -353,6 +359,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         );
                       },
                     ),
+                  ),
             ),
           ],
         );

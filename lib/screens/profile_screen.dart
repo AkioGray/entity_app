@@ -91,13 +91,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         final Color borderColor = isDark ? Colors.white.withValues(alpha: 0.05) : const Color(0xFFE2E8F0);
         final titleStyle = GoogleFonts.spaceGrotesk(color: textPrimary, fontWeight: FontWeight.bold);
 
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 400),
-            child: _isLoading
-                ? _buildSkeletonUI(isDark)
-                : _buildProfileUI(l10n, cardBgColor, primaryCyan, primaryPurple, textPrimary, textSecondary, borderColor, titleStyle, isDark),
+        return RefreshIndicator(
+          color: primaryCyan,
+          onRefresh: _loadData,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(24.0),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 400),
+              child: _isLoading
+                  ? _buildSkeletonUI(isDark)
+                  : _buildProfileUI(l10n, cardBgColor, primaryCyan, primaryPurple, textPrimary, textSecondary, borderColor, titleStyle, isDark),
+            ),
           ),
         );
       }
