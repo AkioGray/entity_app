@@ -13,13 +13,23 @@ class ProfileRepository {
     globalUserEmail.value = data['email'] as String;
     globalProf1.value = data['profileSubject1'] as String? ?? '';
     globalProf2.value = data['profileSubject2'] as String? ?? '';
+    globalRegion.value = data['region'] as String?;
+    globalSchoolType.value = data['schoolType'] as String? ?? 'urban';
+    globalHasQuota.value = data['hasQuota'] as bool? ?? false;
   }
 
   static Future<void> saveUserData() async {
-    await _dio.put('/users/me/profile-subjects', data: {
-      'profileSubject1': globalProf1.value,
-      'profileSubject2': globalProf2.value,
-    });
+    await Future.wait([
+      _dio.put('/users/me/profile-subjects', data: {
+        'profileSubject1': globalProf1.value,
+        'profileSubject2': globalProf2.value,
+      }),
+      _dio.put('/users/me/sim-params', data: {
+        'region': globalRegion.value,
+        'schoolType': globalSchoolType.value,
+        'hasQuota': globalHasQuota.value,
+      }),
+    ]);
   }
 
   static String friendlyError(Object e) {

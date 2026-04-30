@@ -6,7 +6,7 @@ final ValueNotifier<String> globalUserName = ValueNotifier<String>('Adil');
 final ValueNotifier<String> globalUserEmail = ValueNotifier<String>('adilaiserik@gmail.com');
 
 final ValueNotifier<String?> globalRegion = ValueNotifier<String?>(null);
-final ValueNotifier<String> globalSchoolType = ValueNotifier<String>('city');
+final ValueNotifier<String> globalSchoolType = ValueNotifier<String>('urban');
 final ValueNotifier<bool> globalHasQuota = ValueNotifier<bool>(false);
 
 // ДАННЫЕ ПРОФТЕСТА

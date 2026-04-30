@@ -205,9 +205,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 valueListenable: globalSchoolType,
                 builder: (context, sType, _) {
                   return _buildToggleCard(
-                    title: l10n.school_type, val1: l10n.city, val2: l10n.rural, isVal1: sType == 'city',
+                    title: l10n.school_type, val1: l10n.city, val2: l10n.rural, isVal1: sType == 'urban',
                     activeColor: primaryCyan, cardBgColor: cardBgColor, borderColor: borderColor, textPrimary: textPrimary, textSecondary: textSecondary,
-                    onToggle: () => globalSchoolType.value = sType == 'city' ? 'rural' : 'city',
+                    onToggle: () => globalSchoolType.value = sType == 'urban' ? 'rural' : 'urban',
                   );
                 }
               ),
