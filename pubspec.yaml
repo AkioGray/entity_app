@@ -1,5 +1,5 @@
 name: entity_app
-description: "ENT.AI Predictor Mobile Application"
+description: "Entity — ЕНТ и карьерный помощник"
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -13,14 +13,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   google_fonts: ^6.2.1
   animations: ^2.0.11
-
-  # HTTP-клиент
   dio: ^5.4.0
-
-  # Безопасное хранение JWT-токена
   flutter_secure_storage: ^9.0.0
-
-  # Мультиязычность
   flutter_localizations:
     sdk: flutter
   intl: any
@@ -32,7 +26,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  # Эта строчка обязательна, чтобы Flutter сам генерировал файлы переводов
   generate: true
 
   assets:
