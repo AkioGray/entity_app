@@ -51,16 +51,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
       _hasMore = true;
     });
 
-    final cities = await UniversityRepository.getFilterCities();
-    final newUniversities = await UniversityRepository.getUniversities(page: _currentPage, cityFilter: _selectedCity, searchQuery: _searchQuery);
+    try {
+      final lang = Localizations.localeOf(context).languageCode;
+      final cities = await UniversityRepository.getFilterCities();
+      final newUniversities = await UniversityRepository.getUniversities(
+        page: _currentPage, cityFilter: _selectedCity, searchQuery: _searchQuery, lang: lang,
+      );
 
-    if (mounted) {
-      setState(() {
-        _availableCities = cities;
-        _universities.addAll(newUniversities);
-        _isLoading = false;
-        if (newUniversities.length < 10) _hasMore = false;
-      });
+      if (mounted) {
+        setState(() {
+          _availableCities = cities;
+          _universities.addAll(newUniversities);
+          _isLoading = false;
+          if (newUniversities.length < 10) _hasMore = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(UniversityRepository.friendlyError(e)),
+          backgroundColor: const Color(0xFFEF4444),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ));
+      }
     }
   }
 
@@ -70,15 +85,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
     setState(() => _isLoadingMore = true);
     _currentPage++;
 
-    final newUniversities = await UniversityRepository.getUniversities(page: _currentPage, cityFilter: _selectedCity, searchQuery: _searchQuery);
+    try {
+      final lang = Localizations.localeOf(context).languageCode;
+      final newUniversities = await UniversityRepository.getUniversities(
+        page: _currentPage, cityFilter: _selectedCity, searchQuery: _searchQuery, lang: lang,
+      );
 
-    if (mounted) {
-      setState(() {
-        _universities.addAll(newUniversities);
-        _isLoadingMore = false;
-        if (newUniversities.isEmpty || newUniversities.length < 10) _hasMore = false;
-      });
+      if (mounted) {
+        setState(() {
+          _universities.addAll(newUniversities);
+          _isLoadingMore = false;
+          if (newUniversities.isEmpty || newUniversities.length < 10) _hasMore = false;
+        });
+      }
+    } catch (_) {
+      if (mounted) setState(() { _isLoadingMore = false; _currentPage--; });
     }
+
   }
 
   void _onScroll() {
@@ -284,7 +307,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 width: 48,
                                 height: 48,
                                 decoration: BoxDecoration(color: primaryCyan.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
-                                child: Icon(Icons.account_balance_rounded, color: primaryCyan),
+                                child: uni.logoUrl != null
+                                    ? ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.network(uni.logoUrl!, fit: BoxFit.cover, errorBuilder: (_, __, ___) => Icon(Icons.account_balance_rounded, color: primaryCyan)))
+                                    : Icon(Icons.account_balance_rounded, color: primaryCyan),
                               ),
                               const SizedBox(width: 16),
                               Expanded(
@@ -297,27 +322,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       children: [
                                         Icon(Icons.location_on_rounded, size: 14, color: textSecondary),
                                         const SizedBox(width: 4),
-                                        Text(uni.city, style: GoogleFonts.inter(color: textSecondary, fontSize: 12)),
+                                        Expanded(child: Text(uni.city, style: GoogleFonts.inter(color: textSecondary, fontSize: 12), overflow: TextOverflow.ellipsis)),
                                       ],
                                     ),
                                     const SizedBox(height: 12),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(l10n.score_threshold, style: GoogleFonts.inter(color: textSecondary, fontSize: 10)),
-                                            Text('${uni.minScore}', style: titleStyle.copyWith(fontSize: 14, color: primaryCyan)),
-                                          ],
-                                        ),
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            Text(l10n.grant_chance, style: GoogleFonts.inter(color: textSecondary, fontSize: 10)),
-                                            Text('${(uni.grantChance * 100).toInt()}%', style: titleStyle.copyWith(fontSize: 14, color: const Color(0xFF10B981))),
-                                          ],
-                                        ),
+                                        if (uni.rating != null)
+                                          Row(children: [
+                                            const Icon(Icons.star_rounded, size: 14, color: Color(0xFFFBBF24)),
+                                            const SizedBox(width: 4),
+                                            Text(uni.rating!.toStringAsFixed(1), style: titleStyle.copyWith(fontSize: 14, color: const Color(0xFFFBBF24))),
+                                          ]),
+                                        if (uni.tuitionFeeMin != null)
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            children: [
+                                              Text(l10n.score_threshold, style: GoogleFonts.inter(color: textSecondary, fontSize: 10)),
+                                              Text('${(uni.tuitionFeeMin! / 1000).toInt()}к ₸', style: titleStyle.copyWith(fontSize: 14, color: primaryCyan)),
+                                            ],
+                                          ),
                                       ],
                                     )
                                   ],
