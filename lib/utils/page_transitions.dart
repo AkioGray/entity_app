@@ -11,8 +11,8 @@ class EntityPageRoute<T> extends PageRouteBuilder<T> {
             return SharedAxisTransition(
               animation: animation,
               secondaryAnimation: secondaryAnimation,
-              transitionType: SharedAxisTransitionType.scaled, // Глубокий зум-эффект
-              fillColor: Colors.transparent, // Не перекрывает наш темный фон
+              transitionType: SharedAxisTransitionType.scaled,
+              fillColor: Colors.transparent,
               child: child,
             );
           },

@@ -29,13 +29,6 @@ class ChatRepository {
 
   Stream<String> getAiResponseStream(String query) async* {
     await Future.delayed(const Duration(milliseconds: 600));
-    
-    final response = 'Это симуляция потокового ответа нейросети на ваш запрос: "$query". В будущем этот стриминг будет подключен к реальному бэкенду.';
-    final words = response.split(' ');
-    
-    for (var word in words) {
-      await Future.delayed(const Duration(milliseconds: 80));
-      yield '$word ';
-    }
+    yield 'Функция ИИ-чата скоро будет доступна.';
   }
 }

@@ -30,8 +30,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _isLoading = false;
   String? _errorMessage;
 
-  String _localProf1 = 'Математика';
-  String _localProf2 = 'Физика';
+  String _localProf1 = '';
+  String _localProf2 = '';
 
   void _showTestAlert(BuildContext context, AppLocalizations l10n, Color cardBgColor, Color primaryCyan, Color textPrimary, Color textSecondary) {
     showDialog(
@@ -117,7 +117,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Text(l10n.select_combo, style: GoogleFonts.inter(color: textSecondary, fontSize: 13, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 8),
                       
-                      // ИСПОЛЬЗУЕМ НОВУЮ ЛОГИКУ ВЫБОРА ПРЕДМЕТОВ
                       GestureDetector(
                         onTap: () => showSmartComboPicker(context, inputBgColor, textPrimary, textSecondary, primaryCyan, (s1, s2) {
                           setState(() {

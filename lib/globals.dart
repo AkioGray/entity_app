@@ -2,20 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'l10n/app_localizations.dart';
 
-final ValueNotifier<String> globalUserName = ValueNotifier<String>('Adil');
-final ValueNotifier<String> globalUserEmail = ValueNotifier<String>('adilaiserik@gmail.com');
+final ValueNotifier<String> globalUserName = ValueNotifier<String>('');
+final ValueNotifier<String> globalUserEmail = ValueNotifier<String>('');
 
 final ValueNotifier<String?> globalRegion = ValueNotifier<String?>(null);
 final ValueNotifier<String> globalSchoolType = ValueNotifier<String>('urban');
 final ValueNotifier<bool> globalHasQuota = ValueNotifier<bool>(false);
 
-// ДАННЫЕ ПРОФТЕСТА
 final ValueNotifier<bool> globalIsTestPassed = ValueNotifier<bool>(false);
 final ValueNotifier<String> globalTestResult = ValueNotifier<String>('');
 
-// УМНЫЙ СЕЛЕКТОР ПРЕДМЕТОВ
-final ValueNotifier<String> globalProf1 = ValueNotifier<String>('Математика');
-final ValueNotifier<String> globalProf2 = ValueNotifier<String>('Физика');
+final ValueNotifier<String> globalProf1 = ValueNotifier<String>('');
+final ValueNotifier<String> globalProf2 = ValueNotifier<String>('');
 
 List<String> getLocalizedRegions(String langCode) {
   if (langCode == 'kk') {
