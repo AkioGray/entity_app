@@ -1,5 +1,6 @@
-package com.example.entity_app
+package kz.entity.app
 
 import io.flutter.embedding.android.FlutterActivity
 
-class MainActivity : FlutterActivity()
+class MainActivity: FlutterActivity() {
+}
